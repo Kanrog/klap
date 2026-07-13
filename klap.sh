@@ -31,16 +31,18 @@ CONFIG_PATH="/home/klap/printer_data/config/KlipperScreen.conf"
 
 echo "Configuring KlipperScreen..."
 
-# Create file if it doesn't exist
+# Create directory and file if they don't exist
+mkdir -p "$(dirname "$CONFIG_PATH")"
 if [ ! -f "$CONFIG_PATH" ]; then
     touch "$CONFIG_PATH"
 fi
 
-# Use a clean approach: extract everything NOT related to [main] 
-# and rebuild the config file with the correct [main] block.
+# Cleanly rebuild the configuration file
 TMP_CONFIG=$(mktemp)
+# Filter out existing [main] and show_cursor settings to avoid duplicates
 grep -v "\[main\]" "$CONFIG_PATH" | grep -v "show_cursor" > "$TMP_CONFIG"
 
+# Write the fresh [main] block and append the rest of the existing config
 {
     echo "[main]"
     echo "show_cursor: True"
@@ -49,9 +51,11 @@ grep -v "\[main\]" "$CONFIG_PATH" | grep -v "show_cursor" > "$TMP_CONFIG"
 
 rm "$TMP_CONFIG"
 
-echo "Restarting KlipperScreen..."
-systemctl restart KlipperScreen
-
-# Give the user time to read the final message before the UI takes over
-echo "--- Optimization complete! Please type 'sudo reboot' to finish. ---"
-sleep 5
+echo "--- Optimization complete! ---"
+read -p "Would you like to reboot now to apply changes? [y/N] " reboot_confirm
+if [[ $reboot_confirm == [yY] ]]; then
+  echo "Rebooting..."
+  sudo reboot
+else
+  echo "Please remember to type 'sudo reboot' later to finish the setup."
+fi
