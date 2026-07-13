@@ -45,6 +45,7 @@ grep -v "\[main\]" "$CONFIG_PATH" | grep -v "show_cursor" > "$TMP_CONFIG"
 {
     echo "[main]"
     echo "show_cursor: True"
+    echo "key_delay_ms: 100"
     cat "$TMP_CONFIG"
 } > "$CONFIG_PATH"
 
