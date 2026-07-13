@@ -29,19 +29,22 @@ systemctl restart NetworkManager
 # 3. Enable Mouse Cursor
 CONFIG_PATH="/home/klap/printer_data/config/KlipperScreen.conf"
 
-if [ -f "$CONFIG_PATH" ]; then
-    echo "Enabling mouse cursor..."
-    # Remove any existing show_cursor lines to avoid duplicates
-    sed -i '/show_cursor/d' "$CONFIG_PATH"
-    # Ensure [main] section exists before appending
-    if ! grep -q "\[main\]" "$CONFIG_PATH"; then
-        echo -e "\n[main]" >> "$CONFIG_PATH"
-    fi
-    # Add the setting under [main]
-    sed -i '/\[main\]/a show_cursor: True' "$CONFIG_PATH"
-    
-    echo "Restarting KlipperScreen to apply changes..."
-    systemctl restart KlipperScreen
+echo "Enabling mouse cursor..."
+
+# If file is empty or missing [main], ensure [main] exists
+if ! grep -q "\[main\]" "$CONFIG_PATH"; then
+    echo "[main]" >> "$CONFIG_PATH"
+fi
+
+# Remove any previous show_cursor line if it exists
+sed -i '/show_cursor/d' "$CONFIG_PATH"
+
+# Add the setting specifically under the [main] section
+sed -i '/\[main\]/a show_cursor: True' "$CONFIG_PATH"
+
+echo "Restarting KlipperScreen to apply changes..."
+systemctl restart KlipperScreen
+
 else
     echo "KlipperScreen.conf not found at $CONFIG_PATH. Skipping cursor config."
 fi
