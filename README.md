@@ -8,4 +8,4 @@ This script automates the common "laptop-specific" tweaks required after install
 Run this command directly on your laptop terminal:
 
 ```bash
-bash <(curl -s [https://raw.githubusercontent.com/Kanrog/klap/main/klap.sh](https://raw.githubusercontent.com/Kanrog/klap/main/klap.sh))
+bash <(curl -s https://raw.githubusercontent.com/Kanrog/klap/main/klap.sh)
