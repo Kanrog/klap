@@ -18,7 +18,7 @@ echo "Disabling lid suspend..."
 sed -i 's/#HandleLidSwitch=suspend/HandleLidSwitch=ignore/' /etc/systemd/logind.conf
 systemctl restart systemd-logind
 
-# 2. Fix NetworkManager Polkit (Allows Wi-Fi management in KlipperScreen)
+# 2. Fix NetworkManager Polkit
 echo "Configuring NetworkManager..."
 cat <<EOF > /etc/NetworkManager/conf.d/99-klipper-screen.conf
 [main]
@@ -27,19 +27,23 @@ EOF
 systemctl restart NetworkManager
 
 # 3. Enable Mouse Cursor
-# Target the user who invoked sudo to ensure we edit the correct home folder
-USER_HOME=$(eval echo "~$SUDO_USER")
+CONFIG_PATH="/home/klap/printer_data/config/KlipperScreen.conf"
 
-if [ -f "$USER_HOME/KlipperScreen/KlipperScreen.conf" ]; then
+if [ -f "$CONFIG_PATH" ]; then
     echo "Enabling mouse cursor..."
-    # If the file exists, update or add the setting
-    if grep -q "show_cursor" "$USER_HOME/KlipperScreen/KlipperScreen.conf"; then
-        sed -i 's/show_cursor:.*/show_cursor: True/' "$USER_HOME/KlipperScreen/KlipperScreen.conf"
-    else
-        sed -i '/\[main\]/a show_cursor: True' "$USER_HOME/KlipperScreen/KlipperScreen.conf"
+    # Remove any existing show_cursor lines to avoid duplicates
+    sed -i '/show_cursor/d' "$CONFIG_PATH"
+    # Ensure [main] section exists before appending
+    if ! grep -q "\[main\]" "$CONFIG_PATH"; then
+        echo -e "\n[main]" >> "$CONFIG_PATH"
     fi
+    # Add the setting under [main]
+    sed -i '/\[main\]/a show_cursor: True' "$CONFIG_PATH"
+    
+    echo "Restarting KlipperScreen to apply changes..."
+    systemctl restart KlipperScreen
 else
-    echo "KlipperScreen.conf not found. Skipping cursor config."
+    echo "KlipperScreen.conf not found at $CONFIG_PATH. Skipping cursor config."
 fi
 
-echo "--- Optimization complete! Please reboot. ---"
+echo "--- Optimization complete! Please type 'sudo reboot' to finish. ---"
