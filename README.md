@@ -5,7 +5,7 @@ A lightweight, no-nonsense utility to optimize x86 laptops for Klipper / Klipper
 ## This is part of my Klipper Laptop guide: https://kanrog.com/klipper-laptop-install
 
 ### Why Klap?
-When running Klipper on repurposed "e-waste" hardware, you shouldn't have to fight the OS to keep the printer alive. This script automates the standard "Maker Terminal" tweaks so you can focus on printing, not troubleshooting.
+When running Klipper on repurposed "e-waste" hardware, you shouldn't have to fight the OS to keep the printer alive. This script automates the standard tweaks so you can focus on printing, not troubleshooting.
 
 ### What it does:
 *   **Lid Switch:** Disables system suspend when closing the lid, keeping your print running even if the laptop is tucked away.
