@@ -1,7 +1,9 @@
 # KLap: Laptop Klipper Optimizer
 
 A lightweight, no-nonsense utility to optimize x86 laptops for Klipper / KlipperScreen duty. 
-this is part of my Klipper Laptop guide: https://kanrog.com/klipper-laptop-install
+
+## This is part of my Klipper Laptop guide: https://kanrog.com/klipper-laptop-install
+
 ### Why Klap?
 When running Klipper on repurposed "e-waste" hardware, you shouldn't have to fight the OS to keep the printer alive. This script automates the standard "Maker Terminal" tweaks so you can focus on printing, not troubleshooting.
 
