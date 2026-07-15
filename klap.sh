@@ -19,14 +19,29 @@ sed -i 's/#HandleLidSwitch=suspend/HandleLidSwitch=ignore/' /etc/systemd/logind.
 systemctl restart systemd-logind
 
 # 2. Fix NetworkManager Polkit
-echo "Configuring NetworkManager..."
+echo "Configuring NetworkManager Permissions..."
 cat <<EOF > /etc/NetworkManager/conf.d/99-klipper-screen.conf
 [main]
 auth-polkit=false
 EOF
+
+# 3. Fix "Not Managed" Wi-Fi Error (Debian Netinst conflict)
+echo "Transferring network management to NetworkManager..."
+cat <<EOF > /etc/network/interfaces
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+source /etc/network/interfaces.d/*
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+EOF
+
+# Restart NetworkManager to apply both fixes above
 systemctl restart NetworkManager
 
-# 3. Enable Mouse Cursor
+# 4. Enable Mouse Cursor
 CONFIG_PATH="/home/klap/printer_data/config/KlipperScreen.conf"
 
 echo "Configuring KlipperScreen..."
